@@ -17,7 +17,7 @@ public class Window {
         private WindowStatus windowStatus;
 
 //        @Column(nullable=false)
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.EAGER)
         private Room room;
 
         public Window() {
