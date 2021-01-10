@@ -27,7 +27,13 @@ public class Heater {
     public Heater(){
     }
 
-    public Heater(Long id, String name,  HeaterStatus heaterStatus) {
+    public Heater(Room room, String name,  HeaterStatus heaterStatus) {
+        this.room  =room;
+        this.name = name;
+        this.heaterStatus=  heaterStatus;
+    }
+    public Heater(Room room, Long id, String name,  HeaterStatus heaterStatus) {
+        this.room  =room;
         this.id = id;
         this.name = name;
         this.heaterStatus=  heaterStatus;
