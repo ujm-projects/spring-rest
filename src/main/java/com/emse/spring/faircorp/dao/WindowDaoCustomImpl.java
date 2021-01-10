@@ -11,7 +11,7 @@ public class WindowDaoCustomImpl implements WindowDaoCustom{
     @PersistenceContext
     private EntityManager em;
     /*
-     * find all open windows in given the given room ID
+     * find all open windows in  the given room ID
      * ARGS: ROOM_ID
      * RET: LIST_WINDOWS
      * */
@@ -21,6 +21,22 @@ public class WindowDaoCustomImpl implements WindowDaoCustom{
         return em.createQuery(jpql, Window.class)
                 .setParameter("id", id)
                 .setParameter("status", WindowStatus.OPEN)
+                .getResultList();
+    }
+
+    /*
+     * find all windows in the given building ID
+     * ARGS: ROOM_ID
+     * RET: LIST_WINDOWS
+     * */
+    @Override
+    public List<Window> findWindowsByBuilding(Long id) {
+        String jpql = "select w from Window w " +
+                " JOIN Room r ON r.id = w.room.id" +
+                " JOIN Building b ON b.id = r.building.id" +
+                " WHERE b.id = :id " ;
+        return em.createQuery(jpql, Window.class)
+                .setParameter("id", id)
                 .getResultList();
     }
 }

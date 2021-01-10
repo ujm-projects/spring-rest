@@ -27,10 +27,10 @@ public class WindowController {
 
     @GetMapping
     public List<WindowDto> findAll() {
-//        return windowDao.findAll().stream().map(WindowDto::new).collect(Collectors.toList());
-    List<Window> windowsList=windowDao.findAll();
-    System.out.println("ASD");
-    return windowsList.stream().map(WindowDto::new).collect(Collectors.toList());
+        return windowDao.findAll().stream().map(WindowDto::new).collect(Collectors.toList());
+//    List<Window> windowsList=windowDao.findAll();
+//    System.out.println("ASD");
+//    return windowsList.stream().map(WindowDto::new).collect(Collectors.toList());
 
     }
 

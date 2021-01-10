@@ -18,6 +18,7 @@ public class WindowDto {
     public WindowDto(Window window) {
         this.id = window.getId();
         this.name = window.getName();
+
         this.windowStatus = window.getWindowStatus();
         this.roomName = window.getRoom().getName();
         this.roomId = window.getRoom().getId();
@@ -41,6 +42,7 @@ public class WindowDto {
         roomDto.setName(room.getName());
         roomDto.setCurrentTemperature(room.getCurremtTemperature());
         roomDto.setTargetTemperature(room.getTargetTemperature());
+        roomDto.setFloor(room.getFloor());
     return roomDto;
     }
     public void setName(String name) {
