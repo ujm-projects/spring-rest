@@ -28,6 +28,10 @@ public class Room {
 
     @OneToMany(mappedBy = "room" ,fetch = FetchType.LAZY)
     private List<Window> windows;
+
+    @ManyToOne
+    private Building building;
+
     public Room(){
 
     }

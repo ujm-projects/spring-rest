@@ -71,4 +71,8 @@ public class Heater {
     public void setHeaterStatus(HeaterStatus heaterStatus) {
         this.heaterStatus = heaterStatus;
     }
+
+    public HeaterStatus getHeaterStatus() {
+        return heaterStatus;
+    }
 }
