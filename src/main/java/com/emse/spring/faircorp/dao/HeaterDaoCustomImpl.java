@@ -37,4 +37,16 @@ public class HeaterDaoCustomImpl implements HeaterDaoCustom{
                 .setParameter("status", HeaterStatus.OFF)
                 .getResultList();
     }
+    /*
+     * delete all heater by given room ID
+     * ARGS: ROOM_ID
+     * RET:
+     * */
+    @Override
+    public Integer deleteHeaterByRoom(Long id) {
+        String jpql = "delete from Heater h where h.room.id = :id";
+        return em.createQuery(jpql)
+                .setParameter("id", id)
+                .executeUpdate();
+    }
 }

@@ -30,4 +30,6 @@ public class RoomDaoTest {
         Assertions.assertThat(room.getCurremtTemperature()).isEqualTo(22.3);
     }
 
+
+
 }

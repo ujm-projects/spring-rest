@@ -8,8 +8,13 @@ import org.springframework.data.repository.query.Param;
 
 public interface WindowDao  extends JpaRepository<Window, Long>, WindowDaoCustom {
 
+    /*
+    Delete all windows by given room id
+    Args: Room Id
+    Ret : int: deleted count
+     */
     @Modifying
-    @Query(value = "delete from Rwindow w where w.room.id = :roomId", nativeQuery = true )
-    void deleteRwindowByRoom(@Param("roomId") Long roomId);
+    @Query(value = "delete from RWindow w where w.ROOM_ID = :roomId", nativeQuery = true )
+    int deleteWindowByRoom(@Param("roomId") Long roomId);
 
 }

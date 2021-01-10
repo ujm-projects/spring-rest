@@ -2,6 +2,8 @@ package com.emse.spring.faircorp.dao;
 
 
 import com.emse.spring.faircorp.dao.WindowDao;
+import com.emse.spring.faircorp.model.Heater;
+import com.emse.spring.faircorp.model.Room;
 import com.emse.spring.faircorp.model.Window;
 import com.emse.spring.faircorp.model.WindowStatus;
 import org.assertj.core.api.Assertions;
@@ -13,13 +15,15 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 class WindowDaoTest {
     @Autowired
     private WindowDao windowDao;
-
+    @Autowired
+    private RoomDao roomDao;
     /*
      * find one window in given the given window ID
      * ARGS: WINDOW_ID
@@ -53,5 +57,22 @@ class WindowDaoTest {
     public void shouldNotFindRoomOpenWindows() {
         List<Window> result = windowDao.findRoomOpenWindows(-10L);
         Assertions.assertThat(result).isEmpty();
+    }
+
+    /*
+     * delete all windows in given room ID
+     * ARGS: ROOM_ID
+     * RET: int
+     * */
+    @Test
+    public void shouldDeleteWindowsRoom() {
+        Room room = roomDao.getOne(-10L);
+        List<Long> roomIds = room.getWindows().stream().map(Window::getId).collect(Collectors.toList());
+        Assertions.assertThat(roomIds.size()).isEqualTo(2);
+
+        windowDao.deleteWindowByRoom(-10L);
+        List<Window> result = windowDao.findAllById(roomIds);
+        Assertions.assertThat(result).isEmpty();
+
     }
 }
