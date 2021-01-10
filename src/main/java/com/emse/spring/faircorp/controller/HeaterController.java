@@ -6,6 +6,9 @@ import com.emse.spring.faircorp.dto.HeaterDto;
 import com.emse.spring.faircorp.model.Heater;
 import com.emse.spring.faircorp.model.HeaterStatus;
 import com.emse.spring.faircorp.model.Room;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,20 +25,33 @@ public class HeaterController {
         this.heaterDao= heaterDao;
         this.roomDao = roomDao;
     }
+    @ApiOperation(value = "GET ALL HEATERS IN THE SYSTEM")
     @GetMapping
     public List<HeaterDto> findAll() {
         return heaterDao.findAll().stream().map(HeaterDto::new).collect(Collectors.toList());
     }
+    @ApiOperation(value = "GET A SPECIFIC HEATER BY ITS ID IN THE SYSTEM")
     @GetMapping(path = "/{id}")
     public HeaterDto findById(@PathVariable Long id) {
         return heaterDao.findById(id).map(HeaterDto::new).orElse(null);
     }
+    @ApiOperation(value = "CHANGE HEATER STATUS : ON  | OFF")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
     @PutMapping(path = "/{id}/switch")
     public HeaterDto switchStatus(@PathVariable Long id) {
         Heater heater= heaterDao.findById(id).orElseThrow(IllegalArgumentException::new);
         heater.setHeaterStatus(heater.getHeaterStatus() == HeaterStatus.ON ? HeaterStatus.ON: HeaterStatus.OFF);
         return new HeaterDto(heater);
     }
+
+    @ApiOperation(value = "CREATE A NEW HEATER BY PASSING VALID HEATER OBJECT")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
     @PostMapping
     public HeaterDto create(@RequestBody HeaterDto dto) {
         Room room = roomDao.getOne(dto.getRoomId());
@@ -49,6 +65,8 @@ public class HeaterController {
         }
         return new HeaterDto(heater);
     }
+
+    @ApiOperation(value = "DELETE A HEATER BY ITS ID")
     @DeleteMapping(path = "/{id}")
     public void delete(@PathVariable Long id) {
         heaterDao.deleteById(id);

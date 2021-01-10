@@ -30,18 +30,18 @@ public class WindowController {
         this.roomDao = roomDao;
     }
 
-    @ApiOperation(value = "Get all windows in the system")
+    @ApiOperation(value = "GET ALL THE WINDOWS IN THE SYSTEM")
     @GetMapping
     public List<WindowDto> findAll() {
         return windowDao.findAll().stream().map(WindowDto::new).collect(Collectors.toList());
     }
-    @ApiOperation(value = "Get a specific window by ID")
+    @ApiOperation(value = "GET A SPECIFIC WINDOW BY ITS ID")
     @GetMapping(path = "/{id}")
     public WindowDto findById(@PathVariable Long id) {
         return windowDao.findById(id).map(WindowDto::new).orElse(null);
     }
 
-    @ApiOperation(value = "change status of window : CLOSE | OPEN")
+    @ApiOperation(value = "CHANGE STATUS OF THE WINDOW: CLOSE | OPEN")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 500, message = "internal server error!!!"),
@@ -54,7 +54,7 @@ public class WindowController {
     }
 
 //    @ApiOperation(value = "Get list of Windows by room id ", response = Iterable.class, tags = "")
-    @ApiOperation(value = "Get list of Windows by room id ")
+    @ApiOperation(value = "GET LIST OF WINDOWS BY ROOM ID")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 500, message = "internal server error!!!"),
@@ -64,7 +64,7 @@ public class WindowController {
         return windowDao.findWindowsByRoom(id).stream().map(WindowDto::new).collect(Collectors.toList());
     }
 
-    @ApiOperation(value = "Create a new window by passing new Window object")
+    @ApiOperation(value = "CREATE A NEW WINDOW BY PASSING A WINDOW OBJECT")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 500, message = "internal server error!!!") })
@@ -81,7 +81,7 @@ public class WindowController {
         }
         return new WindowDto(window);
     }
-    @ApiOperation(value = "Delete a window by passing the Window ID")
+    @ApiOperation(value = "DELETE A WINDOW BY ITS ID")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
         windowDao.deleteById(id);
