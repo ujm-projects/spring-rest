@@ -3,6 +3,7 @@ package com.emse.spring.faircorp.dto;
 import com.emse.spring.faircorp.model.Heater;
 import com.emse.spring.faircorp.model.Room;
 import com.emse.spring.faircorp.model.Window;
+import com.sun.istack.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.FetchType;
@@ -12,9 +13,12 @@ import java.util.stream.Collectors;
 
 public class RoomDto {
     private Long id;
+    @NotNull
     private Integer floor;
+    @NotNull
     private String name;
     private Double currentTemperature;
+    @NotNull
     private Double targetTemperature;
     private List<HeaterDto> heaters;
     private List<WindowDto> windows;

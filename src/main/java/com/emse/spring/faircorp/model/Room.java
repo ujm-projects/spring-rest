@@ -23,10 +23,10 @@ public class Room {
    @Column(nullable=true)
     private Double targetTemperature;
 
-    @OneToMany(mappedBy = "room",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "room",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Heater> heaters;
 
-    @OneToMany(mappedBy = "room" ,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "room" ,fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Window> windows;
 
     @ManyToOne
@@ -42,6 +42,12 @@ public class Room {
         this.name = name;
 //        currentTemperature = currentTemperature;
 //        targetTemperature = targetTemperature;
+    }
+
+    public Room( Integer floor, String name,  Double targetedTemp) {
+        this.floor = floor;
+        this.name = name;
+        this.targetTemperature= targetedTemp;
     }
 
     public Long getId() {

@@ -49,7 +49,7 @@ class WindowDaoTest {
                 .containsExactly(Tuple.tuple(-8L, WindowStatus.OPEN));
     }
     /*
-     * find all open windows in given the given room ID
+     * find all open windows in the given room ID
      * ARGS: ROOM_ID
      * RET: LIST_WINDOWS
      * */
@@ -69,10 +69,30 @@ class WindowDaoTest {
         Room room = roomDao.getOne(-10L);
         List<Long> roomIds = room.getWindows().stream().map(Window::getId).collect(Collectors.toList());
         Assertions.assertThat(roomIds.size()).isEqualTo(2);
-
         windowDao.deleteWindowByRoom(-10L);
         List<Window> result = windowDao.findAllById(roomIds);
         Assertions.assertThat(result).isEmpty();
-
+    }
+    /*
+     * find all  windows in the given room ID
+     * ARGS: ROOM_ID
+     * RET: LIST_WINDOWS
+     * */
+    @Test
+    public void findAllWindowsByRoom() {
+        List<Window> result = windowDao.findWindowsByRoom(-9L);
+        Assertions.assertThat(result)
+                .hasSize(3);
+    }
+    /*
+     * find all  windows in the given building ID
+     * ARGS: ROOM_ID
+     * RET: LIST_WINDOWS
+     * */
+    @Test
+    public void findAllWindowsByBuilding() {
+        List<Window> result = windowDao.findWindowsByBuilding(-9L);
+        Assertions.assertThat(result)
+                .hasSize(7);
     }
 }

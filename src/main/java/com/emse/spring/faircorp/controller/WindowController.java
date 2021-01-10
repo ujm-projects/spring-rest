@@ -6,6 +6,11 @@ import com.emse.spring.faircorp.dto.WindowDto;
 import com.emse.spring.faircorp.model.Room;
 import com.emse.spring.faircorp.model.Window;
 import com.emse.spring.faircorp.model.WindowStatus;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,20 +30,22 @@ public class WindowController {
         this.roomDao = roomDao;
     }
 
+    @ApiOperation(value = "Get all windows in the system")
     @GetMapping
     public List<WindowDto> findAll() {
         return windowDao.findAll().stream().map(WindowDto::new).collect(Collectors.toList());
-//    List<Window> windowsList=windowDao.findAll();
-//    System.out.println("ASD");
-//    return windowsList.stream().map(WindowDto::new).collect(Collectors.toList());
-
     }
-
+    @ApiOperation(value = "Get a specific window by ID")
     @GetMapping(path = "/{id}")
     public WindowDto findById(@PathVariable Long id) {
         return windowDao.findById(id).map(WindowDto::new).orElse(null);
     }
 
+    @ApiOperation(value = "change status of window : CLOSE | OPEN")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
     @PutMapping(path = "/{id}/switch")
     public WindowDto switchStatus(@PathVariable Long id) {
         Window window = windowDao.findById(id).orElseThrow(IllegalArgumentException::new);
@@ -46,6 +53,21 @@ public class WindowController {
         return new WindowDto(window);
     }
 
+//    @ApiOperation(value = "Get list of Windows by room id ", response = Iterable.class, tags = "")
+    @ApiOperation(value = "Get list of Windows by room id ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @GetMapping(path = "/byRoom/{roomId}")
+    public List<WindowDto> findAllByRoomId(@PathVariable Long id) {
+        return windowDao.findWindowsByRoom(id).stream().map(WindowDto::new).collect(Collectors.toList());
+    }
+
+    @ApiOperation(value = "Create a new window by passing new Window object")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!") })
     @PostMapping
     public WindowDto create(@RequestBody WindowDto dto) {
         Room room = roomDao.getOne(dto.getRoomId());
@@ -59,9 +81,11 @@ public class WindowController {
         }
         return new WindowDto(window);
     }
+    @ApiOperation(value = "Delete a window by passing the Window ID")
     @DeleteMapping(path = "/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
         windowDao.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
