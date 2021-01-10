@@ -18,6 +18,11 @@ public class RoomDaoTest {
     @Autowired
     private RoomDao roomDao;
 
+    /*
+     * find room by given room ID
+     * ARGS: ROOM_ID
+     * RET: Room
+     * */
     @Test
     public void shouldFindOneRoom() {
         Room room = roomDao.getOne(-10L);

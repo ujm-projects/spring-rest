@@ -8,6 +8,11 @@ import javax.persistence.PersistenceContext;
 public class BuildingDaoCustomImpl  implements BuildingDaoCustom{
     @PersistenceContext
     private EntityManager em;
+    /*
+     * find building by given buidling name
+     * ARGS: Building_name
+     * RET: Building
+     * */
     @Override
     public Building findBuildingByName(String name) {
         String jpql = "select r from Building r where r.name = :name";

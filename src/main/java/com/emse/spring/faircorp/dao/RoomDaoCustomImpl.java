@@ -11,6 +11,11 @@ import java.util.List;
 public class RoomDaoCustomImpl implements RoomDaoCustom{
     @PersistenceContext
     private EntityManager em;
+    /*
+     * find room BY given the given room NAME
+     * ARGS: ROOM_name
+     * RET: ROOM
+     * */
     @Override
     public Room findRoomByName(String name) {
         String jpql = "select r from Room r where r.name = :name";

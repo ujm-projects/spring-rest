@@ -1,5 +1,4 @@
 package com.emse.spring.faircorp.dao;
-import com.emse.spring.faircorp.model.WindowStatus;
 import com.emse.spring.faircorp.model.Heater;
 import com.emse.spring.faircorp.model.HeaterStatus;
 import org.assertj.core.api.Assertions;
@@ -18,6 +17,11 @@ public class HeaterDaoTest {
 
     @Autowired
     private HeaterDao heaterDao;
+    /*
+     * find one heater in given the given heater ID
+     * ARGS: HEATER_ID
+     * RET: Heater
+     * */
     @Test
     public void shouldFindAHeater() {
         Heater heater = heaterDao.getOne(-10L);
@@ -25,18 +29,28 @@ public class HeaterDaoTest {
         Assertions.assertThat(heater.getHeaterStatus()).isEqualTo(HeaterStatus.ON);
     }
 
+    /*
+    * find all open heater in given the given room ID
+    * ARGS: ROOM_ID
+    * RET: LIST_Heater
+    * */
     @Test
     public void shouldFindRoomOpenHeater() {
-        List<Heater> result = heaterDao.findRoomOpenWindows(-9L);
+        List<Heater> result = heaterDao.findRoomOnHeater(-10L);
         Assertions.assertThat(result)
-                .hasSize(1)
-                .extracting("id", "windowStatus")
-                .containsExactly(Tuple.tuple(-8L, WindowStatus.OPEN));
+                .hasSize(2)
+                .extracting("id", "heaterStatus")
+                .containsExactly(Tuple.tuple(-10L, HeaterStatus.ON) ,
+                        Tuple.tuple(-9L, HeaterStatus.ON));
     }
-
+    /*
+     * find all off heater in given the given room ID
+     * ARGS: ROOM_ID
+     * RET: LIST_Heater
+     * */
     @Test
-    public void shouldNotFindRoomOpenWindows() {
-        List<Window> result = windowDao.findRoomOpenWindows(-10L);
+    public void shouldNotFindRoomOffHeater() {
+        List<Heater> result = heaterDao.findRoomOffHeater(-10L);
         Assertions.assertThat(result).isEmpty();
     }
 }

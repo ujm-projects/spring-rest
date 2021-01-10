@@ -20,13 +20,22 @@ class WindowDaoTest {
     @Autowired
     private WindowDao windowDao;
 
+    /*
+     * find one window in given the given window ID
+     * ARGS: WINDOW_ID
+     * RET: Window
+     * */
     @Test
     public void shouldFindAWindow() {
         Window window = windowDao.getOne(-10L);
         Assertions.assertThat(window.getName()).isEqualTo("Window 1");
         Assertions.assertThat(window.getWindowStatus()).isEqualTo(WindowStatus.CLOSED);
     }
-
+    /*
+     * find all open windows in given the given room ID
+     * ARGS: ROOM_ID
+     * RET: LIST_WINDOWS
+     * */
     @Test
     public void shouldFindRoomOpenWindows() {
         List<Window> result = windowDao.findRoomOpenWindows(-9L);
@@ -35,7 +44,11 @@ class WindowDaoTest {
                 .extracting("id", "windowStatus")
                 .containsExactly(Tuple.tuple(-8L, WindowStatus.OPEN));
     }
-
+    /*
+     * find all open windows in given the given room ID
+     * ARGS: ROOM_ID
+     * RET: LIST_WINDOWS
+     * */
     @Test
     public void shouldNotFindRoomOpenWindows() {
         List<Window> result = windowDao.findRoomOpenWindows(-10L);
