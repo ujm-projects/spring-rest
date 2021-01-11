@@ -21,6 +21,15 @@ public class Building {
     public Building(){
 
     }
+    public Building(String name, Double outsideTemperature){
+    this.name=name;
+    this.outsideTemperature=outsideTemperature;
+    }
+    public Building(String name, Double outsideTemperature, List<Room> rooms){
+        this.name=name;
+        this.outsideTemperature=outsideTemperature;
+        this.rooms=rooms;
+    }
 
     public Long getId() {
         return id;
