@@ -1,8 +1,6 @@
 package com.emse.spring.faircorp.dto;
 
-import com.emse.spring.faircorp.model.Heater;
-import com.emse.spring.faircorp.model.Room;
-import com.emse.spring.faircorp.model.Window;
+import com.emse.spring.faircorp.model.*;
 import com.sun.istack.NotNull;
 
 import javax.persistence.Column;
@@ -22,6 +20,10 @@ public class RoomDto {
     private Double targetTemperature;
     private List<HeaterDto> heaters;
     private List<WindowDto> windows;
+
+    private Integer noOfOpenWindow;
+    private Integer noOfOnHeater;
+
     public RoomDto(){
 
     }
@@ -33,9 +35,35 @@ public class RoomDto {
         this. targetTemperature=room.getTargetTemperature();
         this. heaters=room.getHeaters().stream().map(HeaterDto::new).collect(Collectors.toList());
         this. windows=room.getWindows().stream().map(WindowDto::new).collect(Collectors.toList());
+        this.noOfOnHeater=setOnHeater(room);
+        this.noOfOpenWindow=setOpenWindow(room);
+    }
+    private Integer setOnHeater(Room room){
+        List<Heater> heater= room.getHeaters().stream().filter(p -> p.getHeaterStatus().equals(HeaterStatus.ON)).collect(Collectors.toList());
+        return heater.size();
+    }
+    private Integer setOpenWindow(Room room){
+        List<Window> window= room.getWindows().stream().filter(p -> p.getWindowStatus().equals(WindowStatus.OPEN)).collect(Collectors.toList());
+        return window.size();
     }
     public Long getId() {
         return id;
+    }
+
+    public void setNoOfOnHeater(Integer noOfOnHeater) {
+        this.noOfOnHeater = noOfOnHeater;
+    }
+
+    public void setNoOfOpenWindow(Integer noOfOpenWindow) {
+        this.noOfOpenWindow = noOfOpenWindow;
+    }
+
+    public Integer getNoOfOnHeater() {
+        return noOfOnHeater;
+    }
+
+    public Integer getNoOfOpenWindow() {
+        return noOfOpenWindow;
     }
 
     public Integer getFloor() {
