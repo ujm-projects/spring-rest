@@ -12,12 +12,16 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+@RestController
+@RequestMapping("/api/building")
+@CrossOrigin
+@Transactional
 public class BuildingController {
     private final BuildingDao buildingDao;
     private final WindowDao windowDao;

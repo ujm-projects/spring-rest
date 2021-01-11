@@ -16,7 +16,7 @@ public class Building {
     @Column(nullable=true)
     private Double outsideTemperature;
 
-    @OneToMany(mappedBy = "building",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "building",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Room> rooms;
     public Building(){
 
