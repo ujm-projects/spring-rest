@@ -39,7 +39,11 @@ public class WindowDaoCustomImpl implements WindowDaoCustom{
                 .setParameter("id", id)
                 .getResultList();
     }
-
+    /*
+     * find all windows in the given room ID
+     * ARGS: ROOM_ID
+     * RET: LIST_WINDOWS
+     * */
     @Override
     public List<Window> findWindowsByRoom(Long id) {
         String jpql = "select w from Window w " +

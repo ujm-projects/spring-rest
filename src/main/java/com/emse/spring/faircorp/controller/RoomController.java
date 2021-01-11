@@ -5,9 +5,7 @@ import com.emse.spring.faircorp.dao.RoomDao;
 import com.emse.spring.faircorp.dao.WindowDao;
 import com.emse.spring.faircorp.dto.RoomDto;
 import com.emse.spring.faircorp.dto.WindowDto;
-import com.emse.spring.faircorp.model.Room;
-import com.emse.spring.faircorp.model.Window;
-import com.emse.spring.faircorp.model.WindowStatus;
+import com.emse.spring.faircorp.model.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -62,17 +60,36 @@ public class RoomController {
     Args: RoomID
     Ret: RoomDto
      */
-    @ApiOperation(value = "CHANGE ALL HEATER AND WINDOW STATUS TO ITS INVERSE IN A SPECIFIC ROOM")
+    @ApiOperation(value = "CHANGE ALL WINDOW STATUS TO ITS INVERSE IN A SPECIFIC ROOM : CLOSE |OPEN ")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 500, message = "internal server error!!!"),
             @ApiResponse(code = 404, message = "not found!!!") })
-    @PutMapping(path = "/{id}/switchWindow")
-    public RoomDto switchStatus(@PathVariable Long id) {
+    @PutMapping(path = "/{id}/switchWindowsStatus")
+    public RoomDto switchWindowStatus(@PathVariable Long id) {
         Room room=roomDao.findById(id).orElseThrow(IllegalArgumentException::new);
         List<Window> windows = windowDao.findWindowsByRoom(room.getId());
         windows.forEach(w->{
             w.setWindowStatus(w.getWindowStatus() == WindowStatus.OPEN ? WindowStatus.CLOSED: WindowStatus.OPEN);
+        });
+        return new RoomDto(room);
+    }
+    /*
+    change all heater status to inverse of a specific room
+    Args: RoomID
+    Ret: RoomDto
+     */
+    @ApiOperation(value = "CHANGE ALL HEATER STATUS TO ITS INVERSE IN A SPECIFIC ROOM : CLOSE |OPEN ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @PutMapping(path = "/{id}/switchHeatersStatus")
+    public RoomDto switchHeaterStatus(@PathVariable Long id) {
+        Room room=roomDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        List<Heater> heaters = heaterDao.findAllHeaterByRoom(room.getId());
+        heaters.forEach(w->{
+            w.setHeaterStatus(w.getHeaterStatus() == HeaterStatus.ON ? HeaterStatus.OFF: HeaterStatus.ON);
         });
         return new RoomDto(room);
     }

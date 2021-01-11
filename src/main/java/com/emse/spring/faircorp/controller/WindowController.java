@@ -60,7 +60,7 @@ public class WindowController {
             @ApiResponse(code = 500, message = "internal server error!!!"),
             @ApiResponse(code = 404, message = "not found!!!") })
     @GetMapping(path = "/byRoom/{roomId}")
-    public List<WindowDto> findAllByRoomId(@PathVariable Long id) {
+    public List<WindowDto> findAllByRoomId(@PathVariable("roomId") Long id) {
         return windowDao.findWindowsByRoom(id).stream().map(WindowDto::new).collect(Collectors.toList());
     }
 
