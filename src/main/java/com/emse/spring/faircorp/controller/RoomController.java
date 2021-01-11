@@ -53,7 +53,22 @@ public class RoomController {
             @ApiResponse(code = 404, message = "not found!!!") })
     @GetMapping(path = "/{id}")
     public RoomDto findById(@PathVariable Long id) {
+
         return roomDao.findById(id).map(RoomDto::new).orElse(null);
+    }
+    /*
+    get room by id
+    Args: RoomID
+    Ret: RoomDto
+    */
+    @ApiOperation(value = "GET ALL ROOMs ALONG WITH ITS HEATER AND WINDOWS BY BUILDING ID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @GetMapping(path = "/{id}/building")
+    public List<RoomDto> findAllByBuildingId(@PathVariable Long id) {
+        return roomDao.findRoomByBuilding(id).stream().map(RoomDto::new).collect(Collectors.toList());
     }
     /*
     change all windows status to inverse of a specific room
@@ -75,6 +90,25 @@ public class RoomController {
         return new RoomDto(room);
     }
     /*
+   swtich all windows status OPEN {1} | CLOSE {0}  of a specific room
+   Args: RoomID
+   Ret: RoomDto
+    */
+    @ApiOperation(value = "CHANGE ALL WINDOW STATUS TO OPEN {1} | CLOSE {0} IN A SPECIFIC ROOM : CLOSE |OPEN ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @PutMapping(path = "/{id}/switchWindows")
+    public RoomDto switchWindows(@PathVariable Long id,@RequestParam("status") Integer status ) {
+        Room room=roomDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        List<Window> windows = windowDao.findWindowsByRoom(room.getId());
+        windows.forEach(w->{
+            w.setWindowStatus(status == 0 ? WindowStatus.CLOSED: WindowStatus.OPEN);
+        });
+        return new RoomDto(room);
+    }
+    /*
     change all heater status to inverse of a specific room
     Args: RoomID
     Ret: RoomDto
@@ -90,6 +124,25 @@ public class RoomController {
         List<Heater> heaters = heaterDao.findAllHeaterByRoom(room.getId());
         heaters.forEach(w->{
             w.setHeaterStatus(w.getHeaterStatus() == HeaterStatus.ON ? HeaterStatus.OFF: HeaterStatus.ON);
+        });
+        return new RoomDto(room);
+    }
+    /*
+    change all heater status ON {1} | OFF {0} of a specific room
+    Args: RoomID
+    Ret: RoomDto
+     */
+    @ApiOperation(value = "CHANGE ALL HEATER STATUS TO ON {1} | OFF {0} IN A SPECIFIC ROOM : CLOSE |OPEN ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @PutMapping(path = "/{id}/switchHeaters")
+    public RoomDto switchHeater(@PathVariable Long id, @RequestParam("status") Integer status) {
+        Room room=roomDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        List<Heater> heaters = heaterDao.findAllHeaterByRoom(room.getId());
+        heaters.forEach(w->{
+            w.setHeaterStatus(status == 0 ? HeaterStatus.OFF: HeaterStatus.ON);
         });
         return new RoomDto(room);
     }

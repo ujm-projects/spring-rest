@@ -23,4 +23,18 @@ public class RoomDaoCustomImpl implements RoomDaoCustom{
                 .setParameter("name", name)
                 .getSingleResult();
     }
+    /*
+     * find all room by given the given building id
+     * ARGS: Building_ID
+     * RET: List Rooms
+     * */
+    @Override
+    public List<Room> findRoomByBuilding(Long buildingId) {
+        String jpql = "select r from Room r " +
+                " JOIN Building b  ON b.id=r.building.id" +
+                " where b.id = :id ";
+        return em.createQuery(jpql, Room.class)
+                .setParameter("id", buildingId)
+                .getResultList();
+    }
 }
