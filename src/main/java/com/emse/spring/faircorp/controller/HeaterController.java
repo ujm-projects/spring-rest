@@ -42,9 +42,9 @@ public class HeaterController {
             @ApiResponse(code = 500, message = "internal server error!!!"),
             @ApiResponse(code = 404, message = "not found!!!") })
     @PutMapping(path = "/{id}/switch")
-    public HeaterDto switchStatus(@PathVariable Long id) {
+    public HeaterDto switchStatus(@PathVariable Long id, @RequestParam("status") Integer status) {
         Heater heater= heaterDao.findById(id).orElseThrow(IllegalArgumentException::new);
-        heater.setHeaterStatus(heater.getHeaterStatus() == HeaterStatus.ON ? HeaterStatus.ON: HeaterStatus.OFF);
+        heater.setHeaterStatus(status == 1 ? HeaterStatus.ON: HeaterStatus.OFF);
         return new HeaterDto(heater);
     }
 
