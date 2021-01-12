@@ -20,23 +20,34 @@ public class RoomDto {
     private Double targetTemperature;
     private List<HeaterDto> heaters;
     private List<WindowDto> windows;
-
+    private Long buildingId;
     private Integer noOfOpenWindow;
     private Integer noOfOnHeater;
 
     public RoomDto(){
 
     }
+
+
     public RoomDto(Room room){
         this.id=room.getId();
         this. floor=room.getFloor();
         this. name=room.getName();
         this. currentTemperature=room.getCurremtTemperature();
-        this. targetTemperature=room.getTargetTemperature();
-        this. heaters=room.getHeaters().stream().map(HeaterDto::new).collect(Collectors.toList());
-        this. windows=room.getWindows().stream().map(WindowDto::new).collect(Collectors.toList());
+        if(room.getTargetTemperature()!=null)
+        this.targetTemperature=room.getTargetTemperature();
+        if(room.getHeaters()!=null && room.getHeaters().size()>0){
+            this. heaters=room.getHeaters().stream().map(HeaterDto::new).collect(Collectors.toList());
+        }
+        if(room.getWindows()!=null && room.getWindows().size()>0) {
+            this.windows = room.getWindows().stream().map(WindowDto::new).collect(Collectors.toList());
+        }
+        if(room.getHeaters()!=null && room.getHeaters().size()>0) {
         this.noOfOnHeater=setOnHeater(room);
-        this.noOfOpenWindow=setOpenWindow(room);
+        }
+        if(room.getWindows()!=null && room.getWindows().size()>0) {
+            this.noOfOpenWindow = setOpenWindow(room);
+        }
     }
     private Integer setOnHeater(Room room){
         List<Heater> heater= room.getHeaters().stream().filter(p -> p.getHeaterStatus().equals(HeaterStatus.ON)).collect(Collectors.toList());
@@ -50,6 +61,13 @@ public class RoomDto {
         return id;
     }
 
+    public void setBuildingId(Long buildingId) {
+        this.buildingId = buildingId;
+    }
+
+    public Long getBuildingId() {
+        return buildingId;
+    }
     public void setNoOfOnHeater(Integer noOfOnHeater) {
         this.noOfOnHeater = noOfOnHeater;
     }

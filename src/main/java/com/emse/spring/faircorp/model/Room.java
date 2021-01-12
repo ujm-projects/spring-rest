@@ -49,7 +49,12 @@ public class Room {
         this.name = name;
         this.targetTemperature= targetedTemp;
     }
-
+    public Room( Integer floor, String name,  Double targetedTemp, Building building) {
+        this.floor = floor;
+        this.name = name;
+        this.targetTemperature= targetedTemp;
+        this.building=building;
+    }
     public Long getId() {
         return id;
     }
