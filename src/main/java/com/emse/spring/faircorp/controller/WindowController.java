@@ -41,6 +41,7 @@ public class WindowController {
         return windowDao.findById(id).map(WindowDto::new).orElse(null);
     }
 
+    @Deprecated
     @ApiOperation(value = "CHANGE STATUS OF THE WINDOW: CLOSE | OPEN")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),
@@ -52,6 +53,19 @@ public class WindowController {
         window.setWindowStatus(window.getWindowStatus() == WindowStatus.OPEN ? WindowStatus.CLOSED: WindowStatus.OPEN);
         return new WindowDto(window);
     }
+
+    @ApiOperation(value = "CHANGE STATUS OF THE WINDOW: CLOSE | OPEN - Version2")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @PutMapping(path = "/{id}/switch-v2")
+    public WindowDto switchStatusV2(@PathVariable Long id, @RequestParam("status") Integer status ) {
+        Window window = windowDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        window.setWindowStatus(status == 0 ? WindowStatus.CLOSED: WindowStatus.OPEN);
+        return new WindowDto(window);
+    }
+
 
 //    @ApiOperation(value = "Get list of Windows by room id ", response = Iterable.class, tags = "")
     @ApiOperation(value = "GET LIST OF WINDOWS BY ROOM ID")
