@@ -1,5 +1,6 @@
 package com.emse.spring.faircorp.controller;
 
+import com.emse.spring.faircorp.dao.BuildingDao;
 import com.emse.spring.faircorp.dao.HeaterDao;
 import com.emse.spring.faircorp.dao.RoomDao;
 import com.emse.spring.faircorp.dao.WindowDao;
@@ -25,12 +26,14 @@ import java.util.stream.Collectors;
 public class RoomController {
     private final WindowDao windowDao;
     private final RoomDao roomDao;
+    private final BuildingDao buildingDao;
     private final HeaterDao heaterDao;
 
-    public RoomController(WindowDao windowDao, RoomDao roomDao, HeaterDao heaterDao) {
+    public RoomController(WindowDao windowDao, RoomDao roomDao, HeaterDao heaterDao,BuildingDao buildingDao) {
         this.windowDao = windowDao;
         this.roomDao = roomDao;
         this.heaterDao=heaterDao;
+        this.buildingDao=buildingDao;
     }
 
     /*
@@ -157,7 +160,8 @@ public class RoomController {
             @ApiResponse(code = 500, message = "internal server error!!!")})
     @PostMapping
     public RoomDto create(@Validated @RequestBody RoomDto dto) {
-        Room room= roomDao.save(new Room(dto.getFloor(), dto.getName(),dto.getTargetTemperature() ));
+        Building building=buildingDao.findById(dto.getBuildingId()).orElseThrow(IllegalArgumentException::new);;
+        Room room= roomDao.save(new Room(dto.getFloor(), dto.getName(),dto.getTargetTemperature(), building ));
         return new RoomDto(room);
     }
     /*
