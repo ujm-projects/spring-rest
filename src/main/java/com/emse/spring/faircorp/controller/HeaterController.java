@@ -3,6 +3,7 @@ package com.emse.spring.faircorp.controller;
 import com.emse.spring.faircorp.dao.HeaterDao;
 import com.emse.spring.faircorp.dao.RoomDao;
 import com.emse.spring.faircorp.dto.HeaterDto;
+import com.emse.spring.faircorp.dto.WindowDto;
 import com.emse.spring.faircorp.model.Heater;
 import com.emse.spring.faircorp.model.HeaterStatus;
 import com.emse.spring.faircorp.model.Room;
@@ -64,6 +65,16 @@ public class HeaterController {
             heater.setHeaterStatus(dto.getHeaterStatus());
         }
         return new HeaterDto(heater);
+    }
+
+    @ApiOperation(value = "GET LIST OF HEATERS BY ROOM ID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @GetMapping(path = "/byRoom/{roomId}")
+    public List<HeaterDto> findAllByRoomId(@PathVariable("roomId") Long id) {
+        return heaterDao.findAllHeaterByRoom(id).stream().map(HeaterDto::new).collect(Collectors.toList());
     }
 
     @ApiOperation(value = "DELETE A HEATER BY ITS ID")
