@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "RWINDOW")
 public class Window {
         @Id
-        @GeneratedValue
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
         @Column(nullable=false, length=255)

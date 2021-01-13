@@ -23,8 +23,9 @@ public class BuildingDto {
     }
     public BuildingDto(Building building){
         this.id=building.getId();
-        this. name=building.getName();
-        this. outsideTemperature=building.getOutsideTemperature();
+        this.name=building.getName();
+        this.outsideTemperature=building.getOutsideTemperature();
+        if(building.getRooms()!=null && building.getRooms().size()>0)
         this.rooms=building.getRooms().stream().map(RoomDto::new).collect(Collectors.toList());
     }
 

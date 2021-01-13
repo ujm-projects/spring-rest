@@ -56,7 +56,6 @@ public class RoomController {
             @ApiResponse(code = 404, message = "not found!!!") })
     @GetMapping(path = "/{id}")
     public RoomDto findById(@PathVariable Long id) {
-
         return roomDao.findById(id).map(RoomDto::new).orElse(null);
     }
     /*
@@ -160,7 +159,7 @@ public class RoomController {
             @ApiResponse(code = 500, message = "internal server error!!!")})
     @PostMapping
     public RoomDto create(@Validated @RequestBody RoomDto dto) {
-        Building building=buildingDao.findById(dto.getBuildingId()).orElseThrow(IllegalArgumentException::new);;
+        Building building=buildingDao.findById(dto.getBuildingId()).orElseThrow(IllegalArgumentException::new);
         Room room= roomDao.save(new Room(dto.getFloor(), dto.getName(),dto.getTargetTemperature(), building ));
         return new RoomDto(room);
     }
