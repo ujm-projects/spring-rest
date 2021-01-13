@@ -21,9 +21,11 @@ public class HeaterDto {
         this.id = heater.getId();
         this.name = heater.getName();
         this.heaterStatus=  heater.getHeaterStatus();
-        this.roomName = heater.getRoom().getName();
-        this.roomId = heater.getRoom().getId();
-        this.room = setRoomDtoFronRoom(heater.getRoom()) ;
+        if(heater.getRoom()!=null) {
+            this.roomName = heater.getRoom().getName();
+            this.roomId = heater.getRoom().getId();
+            this.room = setRoomDtoFronRoom(heater.getRoom());
+        }
     }
     public RoomDto setRoomDtoFronRoom(Room room){
         RoomDto roomDto=new RoomDto();

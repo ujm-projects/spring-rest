@@ -56,9 +56,10 @@ public class HeaterController {
     @PostMapping
     public HeaterDto create(@RequestBody HeaterDto dto) {
         Room room = roomDao.getOne(dto.getRoomId());
+
         Heater heater = null;
         if (dto.getId() == null) {
-            heater = heaterDao.save(new Heater(room, dto.getName(), dto.getHeaterStatus()));
+            heater = heaterDao.save(new Heater(room, dto.getName(), dto.getHeaterStatus(), dto.getPower()));
         }
         else {
             heater=heaterDao.getOne(dto.getId());

@@ -36,18 +36,15 @@ public class RoomDto {
         this. currentTemperature=room.getCurremtTemperature();
         if(room.getTargetTemperature()!=null)
         this.targetTemperature=room.getTargetTemperature();
-        if(room.getHeaters()!=null && room.getHeaters().size()>0){
-            this. heaters=room.getHeaters().stream().map(HeaterDto::new).collect(Collectors.toList());
-        }
-        if(room.getWindows()!=null && room.getWindows().size()>0) {
-            this.windows = room.getWindows().stream().map(WindowDto::new).collect(Collectors.toList());
-        }
-        if(room.getHeaters()!=null && room.getHeaters().size()>0) {
+        if(room.getHeaters()!=null && room.getHeaters().size()>0)
+        this. heaters=room.getHeaters().stream().map(HeaterDto::new).collect(Collectors.toList());
+        if(room.getWindows()!=null && room.getWindows().size()>0)
+        this.windows = room.getWindows().stream().map(WindowDto::new).collect(Collectors.toList());
+        if(room.getHeaters()!=null && room.getHeaters().size()>0)
         this.noOfOnHeater=setOnHeater(room);
-        }
-        if(room.getWindows()!=null && room.getWindows().size()>0) {
-            this.noOfOpenWindow = setOpenWindow(room);
-        }
+        if(room.getWindows()!=null && room.getWindows().size()>0)
+        this.noOfOpenWindow = setOpenWindow(room);
+
     }
     private Integer setOnHeater(Room room){
         List<Heater> heater= room.getHeaters().stream().filter(p -> p.getHeaterStatus().equals(HeaterStatus.ON)).collect(Collectors.toList());

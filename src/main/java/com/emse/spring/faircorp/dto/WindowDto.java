@@ -18,11 +18,12 @@ public class WindowDto {
     public WindowDto(Window window) {
         this.id = window.getId();
         this.name = window.getName();
-
         this.windowStatus = window.getWindowStatus();
-        this.roomName = window.getRoom().getName();
-        this.roomId = window.getRoom().getId();
-        this.room = setRoomDtoFronRoom(window.getRoom()) ;
+        if(window.getRoom()!=null){
+            this.roomName = window.getRoom().getName();
+            this.roomId = window.getRoom().getId();
+            this.room = setRoomDtoFromRoom(window.getRoom()) ;
+        }
     }
 
     public Long getId() {
@@ -36,7 +37,7 @@ public class WindowDto {
     public String getName() {
         return name;
     }
-    public RoomDto setRoomDtoFronRoom(Room room){
+    public RoomDto setRoomDtoFromRoom(Room room){
         RoomDto roomDto=new RoomDto();
         roomDto.setId(room.getId());
         roomDto.setName(room.getName());
