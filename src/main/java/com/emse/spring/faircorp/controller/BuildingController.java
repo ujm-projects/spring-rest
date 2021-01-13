@@ -89,6 +89,58 @@ public class BuildingController {
         return new  ResponseEntity(HttpStatus.OK) ;
     }
     /*
+       swtich all windows status OPEN {1} | CLOSE {0}  of a specific Building
+       Args: RoomID
+       Ret: RoomDto
+    */
+    @ApiOperation(value = "CHANGE ALL WINDOW STATUS TO OPEN {1} | CLOSE {0} IN A SPECIFIC BUILDING : CLOSE |OPEN ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @PutMapping(path = "/{id}/switchWindows")
+    public ResponseEntity switchWindows(@PathVariable Long id,@RequestParam("status") Integer status ) {
+        Building building=buildingDao.findById(id).orElse(null);
+        if(building==null)
+            return new ResponseEntity("BUILDING NOT FOUND",HttpStatus.NOT_FOUND);
+        List<Room> rooms=roomDao.findRoomByBuilding(building.getId());
+        if(rooms.size()<1)
+            return new ResponseEntity("BUILDING HAS NO ROOM",HttpStatus.NOT_FOUND);
+        rooms.forEach(r->{
+            List<Window> windows = windowDao.findWindowsByRoom(r.getId());
+            windows.forEach(w->{
+                w.setWindowStatus(status == 0 ? WindowStatus.CLOSED: WindowStatus.OPEN);
+            });
+        });
+        return new ResponseEntity(new BuildingDto(building),HttpStatus.OK);
+    }
+    /*
+    change all heater status ON {1} | OFF {0} of a specific building
+    Args: RoomID
+    Ret: RoomDto
+     */
+    @ApiOperation(value = "CHANGE ALL HEATER STATUS TO ON {1} | OFF {0} IN A SPECIFIC BUILDING : CLOSE |OPEN ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @PutMapping(path = "/{id}/switchHeaters")
+    public ResponseEntity switchHeater(@PathVariable Long id, @RequestParam("status") Integer status) {
+        Building building=buildingDao.findById(id).orElse(null);
+        if(building==null)
+            return new ResponseEntity("BUILDING NOT FOUND",HttpStatus.NOT_FOUND);
+        List<Room> rooms=roomDao.findRoomByBuilding(building.getId());
+        if(rooms.size()<1)
+            return new ResponseEntity("BUILDING HAS NO ROOM",HttpStatus.NOT_FOUND);
+        rooms.forEach(r->{
+            List<Heater> heaters = heaterDao.findAllHeaterByRoom(r.getId());
+            heaters.forEach(w->{
+                w.setHeaterStatus(status == 0 ? HeaterStatus.OFF: HeaterStatus.ON);
+            });
+        });
+        return new ResponseEntity(new BuildingDto(building),HttpStatus.OK);
+    }
+    /*
      UPDATE BUILDING NAME AND OUTSIDE TEMP
      Args: BUILDING DTO
      Ret: BUILDING_DTO

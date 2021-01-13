@@ -75,8 +75,6 @@ public class WindowController {
         return new ResponseEntity(new WindowDto(window),HttpStatus.OK);
     }
 
-
-//    @ApiOperation(value = "Get list of Windows by room id ", response = Iterable.class, tags = "")
     @ApiOperation(value = "GET LIST OF WINDOWS BY ROOM ID")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),

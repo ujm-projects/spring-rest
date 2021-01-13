@@ -84,6 +84,27 @@ public class RoomController {
     Args: RoomID
     Ret: RoomDto
      */
+    @ApiOperation(value = "UPDATE EXISTING ROOM DATA BY PASSING ROOM_DTO")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @PutMapping(path = "/{id}")
+    public ResponseEntity update(@PathVariable Long id, @RequestBody RoomDto dto) {
+        Room room=roomDao.findById(id).orElse(null);
+        if(room==null)
+            return new ResponseEntity("ROOM NOT FOUND",HttpStatus.NOT_FOUND);
+        room.setName(dto.getName());
+        room.setTargetTemperature(dto.getTargetTemperature());
+        room.setFloor(dto.getFloor());
+        room.setCurremtTemperature(dto.getCurrentTemperature());
+        return new ResponseEntity(new RoomDto(room),HttpStatus.OK);
+    }
+    /*
+    change all windows status to inverse of a specific room
+    Args: RoomID
+    Ret: RoomDto
+     */
     @ApiOperation(value = "CHANGE ALL WINDOW STATUS TO ITS INVERSE IN A SPECIFIC ROOM : CLOSE |OPEN ")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),
@@ -177,7 +198,7 @@ public class RoomController {
     public ResponseEntity create(@Validated @RequestBody RoomDto dto) {
         Building building=buildingDao.findById(dto.getBuildingId()).orElse(null);
         if(building==null)
-            return new ResponseEntity("ROOM NOT FOUND",HttpStatus.NOT_FOUND);
+            return new ResponseEntity("BUILDING NOT FOUND",HttpStatus.NOT_FOUND);
         Room room= roomDao.save(new Room(dto.getFloor(), dto.getName(),dto.getTargetTemperature(), building ));
         return new ResponseEntity(new RoomDto(room),HttpStatus.CREATED);
     }
