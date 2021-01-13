@@ -10,6 +10,10 @@ import com.emse.spring.faircorp.model.Room;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import javassist.NotFoundException;
+import org.hibernate.annotations.NotFound;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +37,12 @@ public class HeaterController {
     }
     @ApiOperation(value = "GET A SPECIFIC HEATER BY ITS ID IN THE SYSTEM")
     @GetMapping(path = "/{id}")
-    public HeaterDto findById(@PathVariable Long id) {
-        return heaterDao.findById(id).map(HeaterDto::new).orElse(null);
+    public ResponseEntity findById(@PathVariable Long id) {
+        HeaterDto heater= heaterDao.findById(id).map(HeaterDto::new).orElse(null);
+        if(heater==null){
+            return new ResponseEntity("NOT FOUND", HttpStatus.NOT_FOUND) ;
+        }
+        return new ResponseEntity(heater, HttpStatus.OK) ;
     }
     @ApiOperation(value = "CHANGE HEATER STATUS : ON  | OFF")
     @ApiResponses(value = {
@@ -42,10 +50,13 @@ public class HeaterController {
             @ApiResponse(code = 500, message = "internal server error!!!"),
             @ApiResponse(code = 404, message = "not found!!!") })
     @PutMapping(path = "/{id}/switch")
-    public HeaterDto switchStatus(@PathVariable Long id, @RequestParam("status") Integer status) {
-        Heater heater= heaterDao.findById(id).orElseThrow(IllegalArgumentException::new);
+    public ResponseEntity switchStatus(@PathVariable Long id, @RequestParam("status") Integer status) {
+        Heater heater= heaterDao.findById(id).orElse(null);
+        if(heater==null){
+            return new ResponseEntity<>("NOT FOUND", HttpStatus.NOT_FOUND) ;
+        }
         heater.setHeaterStatus(status == 1 ? HeaterStatus.ON: HeaterStatus.OFF);
-        return new HeaterDto(heater);
+        return new ResponseEntity<>(new HeaterDto(heater), HttpStatus.OK) ;
     }
 
     @ApiOperation(value = "CREATE A NEW HEATER BY PASSING VALID HEATER OBJECT")
@@ -54,9 +65,13 @@ public class HeaterController {
             @ApiResponse(code = 500, message = "internal server error!!!"),
             @ApiResponse(code = 404, message = "not found!!!") })
     @PostMapping
-    public HeaterDto create(@RequestBody HeaterDto dto) {
-        Room room = roomDao.getOne(dto.getRoomId());
-
+    public ResponseEntity create(@RequestBody HeaterDto dto) {
+        Room room = roomDao.findById(dto.getRoomId()).orElse(null);
+        if(room==null){
+            return new ResponseEntity<>(
+                    "Room not found",
+                    HttpStatus.NOT_FOUND);
+        }
         Heater heater = null;
         if (dto.getId() == null) {
             heater = heaterDao.save(new Heater(room, dto.getName(), dto.getHeaterStatus(), dto.getPower()));
@@ -65,7 +80,7 @@ public class HeaterController {
             heater=heaterDao.getOne(dto.getId());
             heater.setHeaterStatus(dto.getHeaterStatus());
         }
-        return new HeaterDto(heater);
+        return new ResponseEntity<>(new HeaterDto(heater), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "GET LIST OF HEATERS BY ROOM ID")
@@ -80,8 +95,9 @@ public class HeaterController {
 
     @ApiOperation(value = "DELETE A HEATER BY ITS ID")
     @DeleteMapping(path = "/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Long id) {
         heaterDao.deleteById(id);
+        return new ResponseEntity<>("deleted", HttpStatus.OK);
     }
 
 }

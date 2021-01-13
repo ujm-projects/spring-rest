@@ -6,6 +6,7 @@ import com.emse.spring.faircorp.dao.RoomDao;
 import com.emse.spring.faircorp.dao.WindowDao;
 import com.emse.spring.faircorp.dto.BuildingDto;
 import com.emse.spring.faircorp.dto.RoomDto;
+import com.emse.spring.faircorp.dto.WindowDto;
 import com.emse.spring.faircorp.model.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -54,8 +55,12 @@ public class BuildingController {
             @ApiResponse(code = 500, message = "internal server error!!!"),
             @ApiResponse(code = 404, message = "not found!!!") })
     @GetMapping(path = "/{id}")
-    public BuildingDto findById(@PathVariable Long id) {
-        return buildingDao.findById(id).map(BuildingDto::new).orElse(null);
+    public ResponseEntity findById(@PathVariable Long id) {
+        BuildingDto building= buildingDao.findById(id).map(BuildingDto::new).orElse(null);
+        if(building==null){
+            return new ResponseEntity("WINDOW NOT FOUND",HttpStatus.NOT_FOUND);
+        }else
+            return new ResponseEntity(building,HttpStatus.OK);
     }
     /*
     Create new room
@@ -67,10 +72,10 @@ public class BuildingController {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 500, message = "internal server error!!!")})
     @PostMapping
-    public ResponseEntity<BuildingDto> create(@Validated @RequestBody BuildingDto dto) {
+    public ResponseEntity create(@Validated @RequestBody BuildingDto dto) {
         Building building= buildingDao.save(new Building(dto.getName(), dto.getOutsideTemperature() ));
         BuildingDto bto=new BuildingDto(building);
-        return new  ResponseEntity<>(bto, HttpStatus.OK) ;
+        return new  ResponseEntity(bto, HttpStatus.OK) ;
     }
     /*
     Delete a specific building and all its resources
@@ -79,8 +84,27 @@ public class BuildingController {
      */
     @ApiOperation(value = "DELETE A BUILDING AND ALL ITS RESOURCES INCLUDING ROOMS, HEATERS AND WINDOWS BY PASSING BUILDING ID")
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Long id) {
         buildingDao.deleteById(id);
-        return new  ResponseEntity<>(HttpStatus.OK) ;
+        return new  ResponseEntity(HttpStatus.OK) ;
+    }
+    /*
+     UPDATE BUILDING NAME AND OUTSIDE TEMP
+     Args: BUILDING DTO
+     Ret: BUILDING_DTO
+      */
+    @ApiOperation(value = "UPDATE BUILDING NAME AND OUTSIDE TEMP ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 500, message = "internal server error!!!"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @PutMapping(path = "/{id}")
+    public ResponseEntity updateBuilding(@PathVariable Long id,@RequestBody BuildingDto dto ) {
+        Building building=buildingDao.findById(dto.getId()).orElse(null);
+        if(building==null)
+            return new ResponseEntity("BUILDING NOT FOUND",HttpStatus.NOT_FOUND);
+       building.setName(dto.getName());
+       building.setOutsideTemperature(dto.getOutsideTemperature());
+       return new ResponseEntity(new BuildingDto(building),HttpStatus.OK);
     }
 }
