@@ -39,6 +39,27 @@ This report feature explanation of what has been done in the project and how far
  6. run the android app
  7. In the User interface there are Specific buttons  which allows to see what the application is performing. 
 
+## Testing configuration 
+The API application can be tested using INSOMNIA tool, that helps to test API Application. The configuration file will be given along with the project files, which you can able to simply import to your INSOMNIA tool, and instantly start testing the end points with just clicking the buttons. Because each end points are pre-configured with required input-args. 
+
+* Step 1: import the ‘Insomnia_2021-01-13.json’ file to your insomnia workspace (right top corner)
+
+* Step 2: select ‘remote’ in the environment tab. 
+
+> You can download the tool here :[click-here](https://insomnia.rest/) 
+
+> You can download the workspace configuration here :
+[click-here](https://github.com/ujm-projects/spring-rest/blob/master/Insomnia_2021-01-13.json) 
+
+
+> Atonally, you can test the application using SWAGGER API document in the following link. [click-here](https://rest-api.cleverapps.io/swagger-ui/index.html ) 
+
+## Links to the repo
+GitHub organization : https://github.com/ujm-projects 
+
+Repository-Spring rest application : https://github.com/ujm-projects/spring-rest 
+
+Repository-Android application : https://github.com/ujm-projects/android-app
 
 <!-- #### NOTE!!!
 > Please refer `report.pdf` for more information.  -->
@@ -54,7 +75,6 @@ This report feature explanation of what has been done in the project and how far
 *Code reference* `[dev-mind]`: https://dev-mind.fr/formations.html
 
 *Spring boot* : https://spring.io/projects/spring-boot
-
 
 
 # SPRING SPECIFIC HELP
